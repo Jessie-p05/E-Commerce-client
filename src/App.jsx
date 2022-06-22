@@ -15,7 +15,7 @@ import {
 const App = () => {
   const user = true;
   return (
-    <Router>
+    <div >
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/products/:category" element={<ProductList />} />
@@ -27,7 +27,7 @@ const App = () => {
           element={user ? <Navigate to="/" /> : <Register />}
         />
       </Routes>
-    </Router>
+    </div>
   );
 };
 
