@@ -123,6 +123,7 @@ const Product = () => {
   const location = useLocation();
   const id = location.pathname.split("/")[2];
   const [product, setProduct] = useState({});
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     const getProduct = async () => {
@@ -130,7 +131,7 @@ const Product = () => {
         const res = await axios.get(
           `http://localhost:5000/api/products/find/${id}`
         );
-        console.log(res.data)
+        console.log(res.data);
         setProduct(res.data);
       } catch (e) {
         console.log(e);
@@ -138,6 +139,14 @@ const Product = () => {
     };
     getProduct();
   }, [id]);
+  const handleQuantity = (type) => {
+    if (type === "dec") {
+      quantity > 1 && setQuantity(quantity - 1);
+    } else {
+      setQuantity(quantity + 1);
+    }
+  };
+
   return (
     <Container>
       <Navbar />
@@ -160,18 +169,17 @@ const Product = () => {
             <Filter>
               <FilterTitle>Size</FilterTitle>
               <FilterSize>
-              {product.size?.map((s) => (
-                <FilterSizeOption key={s}>{s}</FilterSizeOption>
-              ))}
-                
+                {product.size?.map((s) => (
+                  <FilterSizeOption key={s}>{s}</FilterSizeOption>
+                ))}
               </FilterSize>
             </Filter>
           </FilterContainer>
           <AddContainer>
             <AmountContainer>
-              <Remove />
-              <Amount>1</Amount>
-              <Add />
+              <Remove onClick={() => handleQuantity("dec")} />
+              <Amount>{quantity}</Amount>
+              <Add onClick={() => handleQuantity("inc")} />
             </AmountContainer>
             <Button>ADD TO CART</Button>
           </AddContainer>
