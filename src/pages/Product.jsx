@@ -8,6 +8,8 @@ import { mobile } from "../responsive";
 import { useLocation } from "react-router-dom";
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { addProduct } from "../redux/cartRedux";
+import { useDispatch } from "react-redux";
 const axios = require("axios").default;
 
 const Container = styled.div``;
@@ -126,6 +128,7 @@ const Product = () => {
   const [quantity, setQuantity] = useState(1);
   const [color, setColor] = useState("");
   const [size, setSize] = useState("");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getProduct = async () => {
@@ -133,7 +136,7 @@ const Product = () => {
         const res = await axios.get(
           `http://localhost:5000/api/products/find/${id}`
         );
-        console.log(res.data);
+        // console.log(res.data);
         setProduct(res.data);
       } catch (e) {
         console.log(e);
@@ -148,6 +151,11 @@ const Product = () => {
     } else {
       setQuantity(quantity + 1);
     }
+  };
+
+  const handleSubmit = () => {
+    dispatch(addProduct({...product,quantity,color,size}))
+   
   };
 
   return (
@@ -166,14 +174,15 @@ const Product = () => {
             <Filter>
               <FilterTitle>Color</FilterTitle>
               {product.color?.map((c) => (
-                <FilterColor color={c} key={c} onClick={()=>setColor(c)}/>
+                <FilterColor color={c} key={c} onClick={() => setColor(c)} />
               ))}
             </Filter>
             <Filter>
               <FilterTitle>Size</FilterTitle>
-              <FilterSize onChange={(e)=>setSize(e.target.value)}>
+              <FilterSize onChange={(e) => setSize(e.target.value)}>
+                <FilterSizeOption value="" selected disabled hidden>Choose Size</FilterSizeOption>
                 {product.size?.map((s) => (
-                  <FilterSizeOption key={s} >{s}</FilterSizeOption>
+                  <FilterSizeOption key={s}>{s}</FilterSizeOption>
                 ))}
               </FilterSize>
             </Filter>
@@ -184,7 +193,7 @@ const Product = () => {
               <Amount>{quantity}</Amount>
               <Add onClick={() => handleQuantity("inc")} />
             </AmountContainer>
-            <Button>ADD TO CART</Button>
+            <Button onClick={handleSubmit}>ADD TO CART</Button>
           </AddContainer>
         </InfoContainer>
       </Wrapper>
