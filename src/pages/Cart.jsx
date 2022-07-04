@@ -1,5 +1,6 @@
 import { Add, Remove } from "@material-ui/icons";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Announcement from "../components/Announcement";
 import Footer from "../components/Footer";
@@ -7,11 +8,10 @@ import Navbar from "../components/Navbar";
 import { mobile } from "../responsive";
 import StripeCheckout from "react-stripe-checkout";
 import { useEffect, useState } from "react";
-import 'dotenv/config';
-
+import "dotenv/config";
+import { userRequest } from "../requestMethods";
 
 const KEY = process.env.REACT_APP_STRIPE;
-
 
 const Container = styled.div``;
 
@@ -162,17 +162,27 @@ const Button = styled.button`
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
-  const[stripeToken,setStripeToken] = useState(null)
-  
-  const onToken = (token)=>{
-    setStripeToken(token)
-  }
+  const [stripeToken, setStripeToken] = useState(null);
+  const navigate = useNavigate();
 
-  useEffect(()=> {
-    
-  })
+  const onToken = (token) => {
+    setStripeToken(token);
+  };
 
-  console.log(stripeToken)
+  useEffect(() => {
+    const makeRequest = async () => {
+      try {
+        const res = await userRequest.post("/checkout/payment", {
+          tokenId: stripeToken.id,
+          amount: cart.totalPrice * 100,
+        });
+        navigate.push("/success", { stripeData: res.data, products: cart });
+      } catch {}
+    };
+    stripeToken && makeRequest();
+  }, [stripeToken, cart.totalPrice, navigate]);
+
+  console.log(stripeToken);
   return (
     <Container>
       <Navbar />
