@@ -88,8 +88,12 @@ const Navbar = () => {
           <ReactLink to={"/"}>
             <MenuItem>HOME</MenuItem>
           </ReactLink>
-          <MenuItem>REGISTER</MenuItem>
-          <MenuItem>SIGN IN</MenuItem>
+          <ReactLink to={"/register"}>
+            <MenuItem>REGISTER</MenuItem>
+          </ReactLink>
+          <ReactLink to={"/login"}>
+            <MenuItem>SIGN IN</MenuItem>
+          </ReactLink>
           <ReactLink to="/cart">
             <MenuItem>
               <Badge badgeContent={quantity} color="primary">
