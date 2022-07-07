@@ -182,7 +182,7 @@ const Cart = () => {
     stripeToken && makeRequest();
   }, [stripeToken, cart.totalPrice, navigate]);
 
-  console.log(stripeToken);
+  // console.log(stripeToken);
   return (
     <Container>
       <Navbar />
